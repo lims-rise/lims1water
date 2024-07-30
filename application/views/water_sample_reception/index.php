@@ -7,6 +7,21 @@
                     <div class="box-header">
                         <h3 class="box-title">Water | Sample reception </h3>
                     </div>
+                    <form role="form"  id="formKeg" method="post" class="form-horizontal">
+        `				<div class="box-body">
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    <input class="form-control " id="project_id" type="hidden"  value="<?php echo $project_id ?>"  disabled>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control " id="client" type="hidden"  value="<?php echo $client ?>"  disabled>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control " id="one_water_sample_id" type="hidden"  value="<?php echo $one_water_sample_id ?>"  disabled>
+                                </div>
+                            </div>
+                        </div>
+				    </form>
         
         <div class="box-body">
         <div style="padding-bottom: 10px;">
@@ -17,21 +32,27 @@
         }
 ?>        
 		<?php echo anchor(site_url('Water_sample_reception/excel'), '<i class="fa fa-file-excel-o" aria-hidden="true"></i> Export to XLS', 'class="btn btn-success"'); ?></div>
-        <table class="table table-bordered table-striped tbody" id="mytable" style="width:100%">
-            <thead>
-                <tr>
-		    <th>Client</th>
-		    <th>Received Lab</th>
-		    <th>Date Of Sample Arrival</th>
-		    <th>Time Of Sample Arrival</th>
-            <th>Client Sample ID</th>
-            <th>Type of Classification</th>
-		    <th>Comments</th>
-		    <th width="120px">Action</th>
-                </tr>
-            </thead>
-	    
-        </table>
+        <div class="table-responsive">
+            <table class="table ho table-bordered table-striped tbody" id="mytable" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Coc</th>
+                        <th>Client as on Coc</th>
+                        <th>Client Sample</th>
+                        <th>One Water Sample ID</th>
+                        <th>Type of Sample</th>
+                        <th>Received Lab</th>
+                        <th>Date Of Sample Arrival</th>
+                        <th>Time Of Sample Arrival</th>
+                        <th>Date Of Sample Collected</th>
+                        <th>Time Of Sample Collected</th>
+                        <th>Comments</th>
+                        <th width="120px">Action</th>
+                    </tr>
+                </thead>
+            
+            </table>
+        </div>
         </div>
                     </div>
             </div>
@@ -60,9 +81,49 @@
                         <!-- <input id="id_req" name="id_req" type="hidden" class="form-control input-sm"> -->
 
                         <div class="form-group">
-                            <label for="project_id" class="col-sm-4 control-label">Client</label>
+                            <label for="project_idx" class="col-sm-4 control-label">COC</label>
                             <div class="col-sm-8">
-                                <input id="project_id" name="project_id" placeholder="Client (as on CoC)" type="text" class="form-control">
+                                <input id="project_idx" name="project_idx" placeholder="Client (as on CoC)" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="clientx" class="col-sm-4 control-label">Client</label>
+                            <div class="col-sm-8">
+                                <input id="clientx" name="clientx" placeholder="Client (as on CoC)" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="client_sample_id" class="col-sm-4 control-label">Client Sample</label>
+                            <div class="col-sm-8">
+                                <input id="client_sample_id" name="client_sample_id" placeholder="Client Sample" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="one_water_sample_idx" class="col-sm-4 control-label">One Water Sample ID</label>
+                            <div class="col-sm-8">
+                                <input id="one_water_sample_idx" name="one_water_sample_id" placeholder="One Water Sample ID" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="classification_id" class="col-sm-4 control-label">Type of Sample</label>
+                            <div class="col-sm-8" >
+                            <select id='classification_id' name="classification_id" class="form-control">
+                                <option>-- Select Type of Sample --</option>
+                                <?php
+                                foreach($classification as $row){
+									if ($classification_id == $row['classification_id']) {
+										echo "<option value='".$row['classification_id']."' selected='selected'>".$row['classification_name']."</option>";
+									}
+									else {
+                                        echo "<option value='".$row['classification_id']."'>".$row['classification_name']."</option>";
+                                    }
+                                }
+                                    ?>
+                            </select>
                             </div>
                         </div>
 
@@ -85,14 +146,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="date_arrival" class="col-sm-4 control-label">Date arrival</label>
+                            <label for="date_arrival" class="col-sm-4 control-label">Date of arrival</label>
                             <div class="col-sm-8">
                                 <input id="date_arrival" name="date_arrival" type="date" class="form-control" placeholder="Date arrival" value="<?php echo date("Y-m-d"); ?>">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="time_arrival" class="col-sm-4 control-label">Time arrival</label>
+                            <label for="time_arrival" class="col-sm-4 control-label">Time of arrival</label>
                             <div class="col-sm-8">
                                 <div class="input-group clockpicker">
                                 <input id="time_arrival" name="time_arrival" class="form-control" placeholder="Time arrival" value="<?php 
@@ -107,28 +168,24 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="client_sample_id" class="col-sm-4 control-label">Client Sample ID </label>
+                            <label for="date_collected" class="col-sm-4 control-label">Date of collected</label>
                             <div class="col-sm-8">
-                                <input id="client_sample_id" name="client_sample_id" placeholder="Client Sample ID" type="text" class="form-control">
+                                <input id="date_collected" name="date_collected" type="date" class="form-control" placeholder="Date collected" value="<?php echo date("Y-m-d"); ?>">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="classification_id" class="col-sm-4 control-label">Type of Classification</label>
-                            <div class="col-sm-8" >
-                            <select id='classification_id' name="classification_id" class="form-control">
-                                <option>-- Select Type of Classification --</option>
-                                <?php
-                                foreach($classification as $row){
-									if ($classification_id == $row['classification_id']) {
-										echo "<option value='".$row['classification_id']."' selected='selected'>".$row['classification_name']."</option>";
-									}
-									else {
-                                        echo "<option value='".$row['classification_id']."'>".$row['classification_name']."</option>";
-                                    }
-                                }
-                                    ?>
-                            </select>
+                            <label for="time_collected" class="col-sm-4 control-label">Time of collected</label>
+                            <div class="col-sm-8">
+                                <div class="input-group clockpicker">
+                                <input id="time_collected" name="time_collected" class="form-control" placeholder="Time collected" value="<?php 
+                                $datetime = new DateTime();
+                                echo $datetime->format( 'H:i' );
+                                ?>">
+                                <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                                </span>
+                                </div>
                             </div>
                         </div>
 
@@ -156,9 +213,11 @@
 <script src="<?php echo base_url('assets/datatables/dataTables.bootstrap.js') ?>"></script>
 <script type="text/javascript">
 
+    var table;
+    let project_id = $('#project_id').val();
+	let client = $('#client').val();
+    let one_water_sample_id = $('#one_water_sample_id').val();
 
-
-    var table
     $(document).ready(function() {
 
         $('.clockpicker').clockpicker({
@@ -182,21 +241,12 @@
         });        
 
         $('#compose-modal').on('shown.bs.modal', function () {
-			$('#project_id').focus();
+			$('#client_sample_id').focus();
             // $('#budget_req').on('input', function() {
             //     formatNumber(this);
             //     });
             });
-
-        // function formatNumber(input) {
-        //     input.value = input.value.replace(/[^\d.]/g, '').replace(/\.(?=.*\.)/g, '');
-        //     if (input.value !== '') {
-        //         var numericValue = parseFloat(input.value.replace(/\./g, '').replace(',', '.'));
-        //         input.value = numericValue.toLocaleString('en-US', { maximumFractionDigits: 2 });
-        //         // Replace commas with dots for the display
-        //         input.value = input.value.replace(/,/g, '.');
-        //     }
-        // }
+    
 
         $("input").keypress(function(){
             $('.val1tip,.val2tip,.val3tip').tooltipster('hide');   
@@ -246,11 +296,15 @@
                 //     "orderable": false
                 // },
                 {"data": "project_id"},
+                {"data": "client"},
+                {"data": "client_sample_id"},
+                {"data": "one_water_sample_id"},
+                {"data": "classification_name"},
                 {"data": "initial"},
                 {"data": "date_arrival"},
                 {"data": "time_arrival"},
-                {"data": "client_sample_id"},
-                {"data": "classification_name"},
+                {"data": "date_collected"},
+                {"data": "time_collected"},
                 {"data": "comments"},
                 {
                     "data" : "action",
@@ -278,8 +332,12 @@
         $('#addtombol').click(function() {
             $('#mode').val('insert');
             $('#modal-title').html('<i class="fa fa-wpforms"></i> Water sample reception | New<span id="my-another-cool-loader"></span>');
-            // $('#project_idx').hide();
-            $('#project_id').val('');
+            $('#project_idx').val(project_id);
+            $('#project_idx').attr('readonly', true);
+            $('#clientx').val(client);
+            $('#clientx').attr('readonly', true);
+            $('#one_water_sample_idx').val(one_water_sample_id);
+            $('#one_water_sample_idx').attr('readonly', true);
             $('#initial').val('');
             $('#id_person').val('');
             $('#client_sample_id').val('');
@@ -292,13 +350,14 @@
             let tr = $(this).parent().parent();
             let data = table.row(tr).data();
             console.log(data);
-            // var data = this.parents('tr').data();
             $('#mode').val('edit');
             $('#modal-title').html('<i class="fa fa-pencil-square"></i> Water sample reception | Update<span id="my-another-cool-loader"></span>');
-            // $('#project_idx').show();
-            $('#project_id').attr('readonly', true);
-            $('#project_id').val(data.project_id);
-            // $('#client_id').val(data.client_id);
+            $('#project_idx').attr('readonly', true);
+            $('#project_idx').val(data.project_id);
+            $('#clientx').val(data.client);
+            $('#clientx').attr('readonly', true);
+            $('#one_water_sample_idx').val(data.one_water_sample_id);
+            $('#one_water_sample_idx').attr('readonly', true);
             $('#id_person').val(data.id_person);
             $('#date_arrival').val(data.date_arrival).trigger('change');
             $('#time_arrival').val(data.time_arrival).trigger('change');
